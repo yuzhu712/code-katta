@@ -65,7 +65,7 @@ public class Stack<E> implements Iterable<E> {
         if(numItems == 0) {
             throw new RuntimeException("Empty Stack");
         }
-        return (E)data[numItems--];
+        return (E)data[--numItems];
     }
 
     /**
@@ -97,7 +97,7 @@ public class Stack<E> implements Iterable<E> {
 
         @Override
         public E next() {
-            return (E)data[i--];
+            return (E)data[--i];
         }
 
         @Override

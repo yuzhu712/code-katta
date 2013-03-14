@@ -1,5 +1,8 @@
 package com.ashishpaliwal.codekatta.algos;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -58,6 +61,20 @@ public class BinaryTree {
         return node;
     }
 
+    public int getTreeDepth() {
+        return getTreeDepth(root);
+    }
+
+    private int getTreeDepth(Node node) {
+        if(node == null) {
+            return 0;
+        }
+
+        int leftDepth = getTreeDepth(node.left);
+        int rightDepth = getTreeDepth(node.right);
+        return Math.max(leftDepth, rightDepth) + 1;
+    }
+
     public void printTree() {
         printTree(root);
         System.out.println();
@@ -72,6 +89,43 @@ public class BinaryTree {
         printTree(node.right);
     }
 
+    private void printTree(List<Node> nodes, int level, int treeDepth) {
+
+        if(nodes.size() == 0) {
+            return;
+        }
+
+        int indent = (int) Math.pow(2, treeDepth - level) - 1;
+        int spacing = (int) (Math.pow(2, treeDepth - level + 1 ) - 1);
+
+        List<Node> nextList = new ArrayList<Node>();
+        for (int i = 0; i < indent; i++) {
+            System.out.print(" ");
+        }
+        for (Node next : nodes) {
+            System.out.print(next.data);
+            for (int i = 0; i < spacing; i++) {
+                System.out.print(" ");
+            }
+            if(next.left != null) {
+                nextList.add(next.left);
+            }
+
+            if(next.right != null) {
+                nextList.add(next.right);
+            }
+        }
+        System.out.println();
+        printTree(nextList, level + 1, treeDepth);
+    }
+
+    public void prettyPrint() {
+        List<Node> node = new ArrayList<Node>();
+        node.add(root);
+
+        printTree(node, 0, getTreeDepth());
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         BinaryTree bTree = new BinaryTree();
@@ -80,6 +134,10 @@ public class BinaryTree {
             bTree.insert(input);
         }
         bTree.printTree();
+        System.out.println("Depth = "+bTree.getTreeDepth());
+        bTree.prettyPrint();
     }
+
+
 
 }

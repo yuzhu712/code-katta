@@ -10,7 +10,6 @@ public abstract class FixedLengthDecoder<M> {
 
     private ByteBuffer messageBuffer;
     private int messageLength;
-    private volatile boolean lengthDecoded;
 
     public M decode(ByteBuffer byteBuffer) {
 
@@ -24,7 +23,7 @@ public abstract class FixedLengthDecoder<M> {
         }
 
 
-        return null;
+        return doDecode(messageBuffer);
 
     }
 

@@ -27,19 +27,45 @@ public class Indexer {
         File path = new File(docPath);
 
         Directory indexDir = FSDirectory.open(new File(indexPath));
-        Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_43);
-        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_43, analyzer);
+        Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_40);
+        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_40, analyzer);
         indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
         IndexWriter indexWriter = new IndexWriter(indexDir, indexWriterConfig);
-        indexFile(path, indexWriter);
+        indexDir(path, indexWriter);
+
+//        indexFile(path, indexWriter);
         indexWriter.close();
     }
 
+    private void indexDir(File directory, IndexWriter indexWriter) throws Exception {
+        if(!directory.isDirectory()) {
+            indexFile(directory, indexWriter);
+        }
+
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            if(!file.isDirectory()) {
+                indexFile(file, indexWriter);
+            } else {
+                indexDir(file, indexWriter);
+            }
+        }
+    }
+
     private void indexFile(File file, IndexWriter indexWriter) throws Exception {
+
+
+        if(!file.getName().endsWith(".java")) {
+            return;
+        }
+        System.out.println("Indexing "+file.getAbsolutePath());
+
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(file);
             Document document = new Document();
+            Field nameField = new TextField("name", file.getName(), Field.Store.YES);
+            document.add(nameField);
             Field pathField = new StringField("path", file.getPath(), Field.Store.YES);
             document.add(pathField);
             document.add(new TextField("content", new BufferedReader(new InputStreamReader(fileInputStream))));

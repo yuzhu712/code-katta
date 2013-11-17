@@ -7,6 +7,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
+import java.net.InetSocketAddress;
+
 
 /**
  *
@@ -18,7 +20,7 @@ public class EchoServer {
     EventLoopGroup group = new NioEventLoopGroup();
     try {
       ServerBootstrap bootstrap = new ServerBootstrap();
-      bootstrap.group(group).channel(NioServerSocketChannel.class).localAddress(PORT).childHandler(new ChannelInitializer<SocketChannel>() {
+      bootstrap.group(group).channel(NioServerSocketChannel.class).localAddress(new InetSocketAddress("localhost",PORT)).childHandler(new ChannelInitializer<SocketChannel>() {
         @Override
         protected void initChannel(SocketChannel socketChannel) throws Exception {
           socketChannel.pipeline().addLast(new EchoServerHandler());

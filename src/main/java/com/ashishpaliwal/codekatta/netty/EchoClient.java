@@ -53,7 +53,8 @@ class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf>{
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     System.out.println("Channel Active");
-    ctx.write(Unpooled.copiedBuffer("Channel Active", CharsetUtil.UTF_8));
+    ctx.writeAndFlush(Unpooled.copiedBuffer("Channel Active", CharsetUtil.UTF_8));
+
   }
 
   @Override
